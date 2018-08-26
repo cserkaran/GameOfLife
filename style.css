@@ -22,6 +22,12 @@ h1{
     border: 1px solid gray;
 }
 
+@keyframes birth{
+    50%{
+        box-shadow: 0 0 0 99px green inset;
+    }
+}
+
 #grid input[type="checkbox"]{
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -32,7 +38,8 @@ h1{
 }
 
 #grid input[type="checkbox"]:checked{
-    background: black;
+    box-shadow: 0 0 0 99px black inset;
+    animation: birth 1s;
 }
 
 button, .button{

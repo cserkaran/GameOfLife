@@ -93,6 +93,7 @@ function $(selector,container){
                     var checkBox = document.createElement('input');
                     checkBox.type = 'checkbox';
                     this.checkBoxes[y][x] = checkBox;
+                    checkBox.coords = [y,x];
                     cell.appendChild(checkBox);
                     row.appendChild(cell);
                 }
@@ -103,6 +104,38 @@ function $(selector,container){
             this.grid.addEventListener('change',function(event){
                 if(event.target.nodeName.toLowerCase() == 'input'){
                     me.started = false;
+                };
+            });
+
+            this.grid.addEventListener('keyup', function(event){
+                var checkbox = event.target;
+                if(checkbox.nodeName.toLowerCase() == 'input'){
+                    var coords = checkbox.coords;
+                    var y = coords[0];
+                    var x = coords[1];
+
+                    switch(event.keyCode){
+                        case 37: // left
+                            if(x > 0){
+                                me.checkBoxes[y][x-1].focus();
+                            }
+                            break;
+                        case 38: //up
+                            if(y > 0){
+                                me.checkBoxes[y-1][x].focus();
+                            }
+                            break;
+                        case 39: // right
+                            if(x < me.size - 1){
+                                me.checkBoxes[y][x+1].focus();
+                            }
+                            break;
+                        case 40: // bottom
+                            if( y < me.size -1){
+                                me.checkBoxes[y+1][x].focus();
+                            }
+                            break;
+                    }
                 };
             });
 
@@ -123,7 +156,7 @@ function $(selector,container){
         },
 
         next: function(){
-
+            var me = this;
             if(!this.started || this.game){
                 this.play();
             }
@@ -137,7 +170,9 @@ function $(selector,container){
             }
 
             if(this.autoplay){
-                
+                this.timer = setTimeout(function ()  {
+                    me.next();
+                },1000)
             }
 
         }
@@ -150,17 +185,23 @@ var lifeView = new LifeView(document.getElementById('grid'), 12);
 (function(){
     
     var buttons = { 
-        next : $('button.next'),
-        autoplay : $('button.autoplay')
+        next : $('button.next')
     }
 
-    buttons.next.addEventListener('click',function(event){
+    buttons.next.addEventListener('click',function(){
         lifeView.next();
     });
 
-    $('#autoplay').addEventListener('change',function(event){
-        buttons.next.textContent = this.checked ? 'Start' : 'Next';
+    $('#autoplay').addEventListener('change',function(){
+        buttons.next.disabled = this.checked;
         lifeView.autoplay = this.checked;
+        if(this.checked){
+            lifeView.next();
+        }
+        else{
+            clearTimeout(lifeView.timer);
+        }
+
     });
 
 })();

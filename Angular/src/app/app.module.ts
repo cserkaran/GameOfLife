@@ -5,6 +5,7 @@ import {HttpClientModule} from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
+import { APP_BASE_HREF } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { AppComponent } from './app.component';
       { path: '', component : AppComponent},
     ])
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  providers: [{provide: APP_BASE_HREF, useValue : '/' }]
 })
 export class AppModule { }
